@@ -93,7 +93,7 @@ public class CM2Magang26 {
         data[jumlahData] = new Pendaftar(nama, nim, prodi, perusahaan, semester, status);
         jumlahData++;
 
-        System.out.println("Data berhasil disimpan! NIM: " + nim);
+        System.out.println("Data berhasil ditambahkan. Total pendaftar: " + jumlahData);
     }
 
     // 2. Tampilkan semua data
@@ -153,14 +153,10 @@ public class CM2Magang26 {
             else if (s.equals("ditolak")) ditolak++;
         }
 
-        // Hitung rasio diterima (desimal)
-        double rasioDiterima = (double) diterima / jumlahData;
-
         System.out.println("\n=== Rekap Status Pendaftar ===");
         System.out.println("Diterima : " + diterima);
         System.out.println("Menunggu : " + menunggu);
         System.out.println("Ditolak  : " + ditolak);
         System.out.println("Total Pendaftar: " + jumlahData);
-        System.out.printf("Rasio Diterima : %.2f\n", rasioDiterima);
     }
 }
