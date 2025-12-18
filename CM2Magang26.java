@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 // Menyimpan satu data pendaftar magang
@@ -6,7 +5,6 @@ class Pendaftar {
     String nama, nim, prodi, perusahaan, status;
     int semester;
 
-    // Mengisi data saat objek dibuat
     public Pendaftar(String nama, String nim, String prodi, String perusahaan, int semester, String status){
         this.nama = nama;
         this.nim = nim;
@@ -18,11 +16,11 @@ class Pendaftar {
 }
 
 public class CM2Magang26 {
-    // Scanner untuk input
     static Scanner sc = new Scanner(System.in);
 
-    // ArrayList untuk menampung semua data pendaftar
-    static ArrayList<Pendaftar> data = new ArrayList<>();
+    // Gunakan array biasa (maksimal 100 data)
+    static Pendaftar[] data = new Pendaftar[100];
+    static int jumlahData = 0;
 
     public static void main(String[] args) {
         int menu;
@@ -55,6 +53,11 @@ public class CM2Magang26 {
 
     // 1. Tambah Data
     static void tambahData() {
+        if (jumlahData >= 100) {
+            System.out.println("Kuota penyimpanan penuh!");
+            return;
+        }
+
         System.out.print("Nama Mahasiswa: ");
         String nama = sc.nextLine();
 
@@ -86,26 +89,27 @@ public class CM2Magang26 {
             System.out.println("Status tidak valid!");
         }
 
-        // Simpan data
-        data.add(new Pendaftar(nama, nim, prodi, perusahaan, semester, status));
+        // Simpan ke array
+        data[jumlahData] = new Pendaftar(nama, nim, prodi, perusahaan, semester, status);
+        jumlahData++;
 
-        System.out.println("Data berhasil ditambahkan. Total pendaftar: " + data.size());
+        System.out.println("Data berhasil disimpan! NIM: " + nim);
     }
 
     // 2. Tampilkan semua data
     static void tampilData() {
-        if (data.isEmpty()) {
+        if (jumlahData == 0) {
             System.out.println("Belum ada pendaftar.");
             return;
         }
 
         System.out.println("\nNo\tNama\t\tNIM\t\tProdi\t\tPerusahaan\t\tStatus");
-        System.out.println("========================================================================================3");
+        System.out.println("========================================================================================");
 
-        int no = 1;
-        for (Pendaftar p : data) {
+        for (int i = 0; i < jumlahData; i++) {
+            Pendaftar p = data[i];
             System.out.printf("%d\t%-10s\t%-10s\t%-15s\t%-15s\t%s\n",
-                    no++, p.nama, p.nim, p.prodi, p.perusahaan, p.status);
+                    (i+1), p.nama, p.nim, p.prodi, p.perusahaan, p.status);
         }
     }
 
@@ -119,7 +123,8 @@ public class CM2Magang26 {
         int no = 1;
         boolean found = false;
 
-        for (Pendaftar p : data) {
+        for (int i = 0; i < jumlahData; i++) {
+            Pendaftar p = data[i];
             if (p.prodi.equalsIgnoreCase(cari)) {
                 System.out.printf("%d\t%-10s\t%-10s\t%-15s\t%s\n",
                         no++, p.nama, p.nim, p.prodi, p.perusahaan);
@@ -134,25 +139,28 @@ public class CM2Magang26 {
 
     // 4. Hitung pendaftar per status
     static void hitungStatus() {
-        if (data.isEmpty()) {
+        if (jumlahData == 0) {
             System.out.println("Belum ada pendaftar.");
             return;
         }
 
         int diterima = 0, menunggu = 0, ditolak = 0;
 
-        for (Pendaftar p : data) {
-            switch (p.status.toLowerCase()) {
-                case "diterima": diterima++; break;
-                case "menunggu": menunggu++; break;
-                case "ditolak": ditolak++; break;
-            }
+        for (int i = 0; i < jumlahData; i++) {
+            String s = data[i].status.toLowerCase();
+            if (s.equals("diterima")) diterima++;
+            else if (s.equals("menunggu")) menunggu++;
+            else if (s.equals("ditolak")) ditolak++;
         }
+
+        // Hitung rasio diterima (desimal)
+        double rasioDiterima = (double) diterima / jumlahData;
 
         System.out.println("\n=== Rekap Status Pendaftar ===");
         System.out.println("Diterima : " + diterima);
         System.out.println("Menunggu : " + menunggu);
         System.out.println("Ditolak  : " + ditolak);
-        System.out.println("Total Pendaftar: " + data.size());
+        System.out.println("Total Pendaftar: " + jumlahData);
+        System.out.printf("Rasio Diterima : %.2f\n", rasioDiterima);
     }
 }
